@@ -22,11 +22,21 @@ jobs:
       - name: Zipalign and Sign Android release
         run: ./zipalign_sign.sh
                     
-      - uses: marvinpinto/action-automatic-releases@latest
+      # - uses: marvinpinto/action-automatic-releases@latest
+      #   with:
+      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #     automatic_release_tag: "latest"
+      #     draft: true
+      #     title: "Perseus Release v${{ env.PERSEUS_VERSION }}"
+      #     files: |
+      #       build/*.apk
+      #
+      # BELOW FROM PerseusCI
+      # Publish APK
+      - name: Release
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          draft: true
-          title: "Perseus Release v${{ env.PERSEUS_VERSION }}"
-          files: |
-            build/*.apk
+          tag: "${{ github.event.inputs.region }}-v${{ env.PERSEUS_VERSION }}"
+          name: "Perseus Release ${{ github.event.inputs.region }} v${{ env.PERSEUS_VERSION }}"
+          artifacts: "build/*.apk"
+          allowUpdates: true
